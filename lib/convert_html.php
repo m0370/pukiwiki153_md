@@ -19,10 +19,44 @@ function convert_html($lines)
 
 	if (! is_array($lines)) $lines = explode("\n", $lines);
 
+
+/*
 	$body = new Body(++$contents_id);
 	$body->parse($lines);
 
 	return $body->toString();
+*/
+
+	foreach ( $lines as &$line ) {
+		$matches = array();
+		if ( preg_match('/^\\!([a-zA-Z0-9_]+)(\\(([^\\)\\n]*)?\\))?/', $line, $matches) ) {
+			$plugin = $matches[1];
+			if ( exist_plugin_convert($plugin) ) {
+				$name = 'plugin_' . $matches[1] . '_convert';
+				$params = array();
+				if ( isset($matches[3]) ) {
+					$params = explode(',', $matches[3]);
+				}
+				$line = call_user_func_array($name, $params);
+			} else {
+				$line = "plugin ${plugin} failed.";
+			}
+		} else {
+			$line = make_link($line);
+			// ファイル読み込んだ場合に改行コードが末尾に付いていることがあるので削除
+			// 空白は削除しちゃだめなのでrtrim()は使ってはいけない
+            $line = str_replace(array("\r\n","\n","\r"), "", $line);
+		}
+	}
+	unset($line);
+
+	$text = implode("\n", $lines);
+
+	$parsedown = new \Parsedown(); //Parsedown→ParsedownExtraに変更しても良い
+	$result = $parsedown ->setBreaksEnabled(true) ->text($text); // ->setBreaksEnabled(true)を付けて改行を可能にしている
+
+	return $result;
+
 }
 
 // Block elements
@@ -144,13 +178,13 @@ function & Factory_Div(& $root, $text)
 	// Seems block plugin?
 	if (PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
 		// Usual code
-		if (preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
+		if (preg_match('/^\!([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
 		    exist_plugin_convert($matches[1])) {
 			return new Div($matches);
 		}
 	} else {
 		// Hack code
-		if(preg_match('/^#([^\(\{]+)(?:\(([^\r]*)\))?(\{*)/', $text, $matches) &&
+		if(preg_match('/^!([^\(\{]+)(?:\(([^\r]*)\))?(\{*)/', $text, $matches) &&
 		   exist_plugin_convert($matches[1])) {
 			$len  = strlen($matches[3]);
 			$body = array();
@@ -266,7 +300,7 @@ class Heading extends Element
 		return $this->last = & $this;
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return FALSE;
 	}
@@ -291,7 +325,7 @@ class HRule extends Element
 		parent::__construct();
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return FALSE;
 	}
@@ -329,7 +363,7 @@ class ListContainer extends Element
 			$this->last = & $this->last->insert(Factory_Inline($text));
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return (! is_a($obj, 'ListContainer')
 			|| ($this->tag == $obj->tag && $this->level == $obj->level));
@@ -381,7 +415,7 @@ class ListElement extends Element
 		$this->head  = $head;
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return (! is_a($obj, 'ListContainer') || ($obj->level > $this->level));
 	}
@@ -469,7 +503,7 @@ class BQuote extends Element
 		}
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return (! is_a($obj, get_class($this)) || $obj->level >= $this->level);
 	}
@@ -548,7 +582,7 @@ class TableCell extends Element
 			$text      = substr($text, 1);
 		}
 
-		if ($text != '' && $text{0} == '#') {
+		if ($text != '' && $text[0] == '#') {
 			// Try using Div class for this $text
 			$obj = & Factory_Div($this, $text);
 			if (is_a($obj, 'Paragraph'))
@@ -613,7 +647,7 @@ class Table extends Element
 		$this->elements[] = $row;
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return is_a($obj, 'Table') && ($obj->col == $this->col);
 	}
@@ -752,7 +786,7 @@ class YTable extends Element
 		$this->elements[] = implode('', $str);
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return is_a($obj, 'YTable') && ($obj->col == $this->col);
 	}
@@ -788,10 +822,10 @@ class Pre extends Element
 		global $preformat_ltrim;
 		parent::__construct();
 		$this->elements[] = htmlsc(
-			(! $preformat_ltrim || $text == '' || $text{0} != ' ') ? $text : substr($text, 1));
+			(! $preformat_ltrim || $text == '' || $text[0] != ' ') ? $text : substr($text, 1));
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return is_a($obj, 'Pre');
 	}
@@ -824,7 +858,7 @@ class Div extends Element
 		list(, $this->name, $this->param) = array_pad($out, 3, '');
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return FALSE;
 	}
@@ -851,7 +885,7 @@ class Align extends Element
 		$this->align = $align;
 	}
 
-	function canContain(& $obj)
+	function canContain($obj)
 	{
 		return is_a($obj, 'Inline');
 	}
@@ -878,7 +912,7 @@ class Body extends Element
 		':' => 'DList',
 		'|' => 'Table',
 		',' => 'YTable',
-		'#' => 'Div');
+		'!' => 'Div');
 
 	function Body($id)
 	{
@@ -926,7 +960,7 @@ class Body extends Element
 
 			// Multiline-enabled block plugin
 			if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
-			    preg_match('/^#[^{]+(\{\{+)\s*$/', $line, $matches)) {
+			    preg_match('/^![^{]+(\{\{+)\s*$/', $line, $matches)) {
 				$len = strlen($matches[1]);
 				$line .= "\r"; // Delimiter
 				while (! empty($lines)) {
@@ -941,7 +975,7 @@ class Body extends Element
 			}
 
 			// The first character
-			$head = $line{0};
+			$head = $line[0];
 
 			// Heading
 			if ($head == '*') {

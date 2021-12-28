@@ -225,7 +225,7 @@ function add_author_info($wikitext, $timestamp_to_keep)
 	}
 	$displayname = preg_replace('/"/', '', $fullname);
 	$user_prefix = get_auth_user_prefix();
-	$author_text = sprintf('#author("%s","%s","%s")',
+	$author_text = sprintf('!author("%s","%s","%s")',
 		get_date_atom(UTIME + LOCALZONE) . $datetime_to_keep,
 		($author ? $user_prefix . $author : ''),
 		$displayname) . "\n";
@@ -234,7 +234,7 @@ function add_author_info($wikitext, $timestamp_to_keep)
 
 function remove_author_info($wikitext)
 {
-	return preg_replace('/^\s*#author\([^\n]*(\n|$)/m', '', $wikitext);
+	return preg_replace('/^\s*!author\([^\n]*(\n|$)/m', '', $wikitext);
 }
 
 /**
@@ -246,18 +246,18 @@ function remove_author_header($wikitext)
 	while (($pos = strpos($wikitext, "\n", $start)) != false) {
 		$line = substr($wikitext, $start, $pos);
 		$m = null;
-		if (preg_match('/^#author\(/', $line, $m)) {
-			// fond #author line, Remove this line only
+		if (preg_match('/^!author\(/', $line, $m)) {
+			// fond !author line, Remove this line only
 			if ($start === 0) {
 				return substr($wikitext, $pos + 1);
 			} else {
 				return substr($wikitext, 0, $start - 1) .
 					substr($wikitext, $pos + 1);
 			}
-		} else if (preg_match('/^#freeze(\W|$)/', $line, $m)) {
-			// Found #freeze still in header
+		} else if (preg_match('/^!freeze(\W|$)/', $line, $m)) {
+			// Found !freeze still in header
 		} else {
-			// other line, #author not found
+			// other line, !author not found
 			return $wikitext;
 		}
 		$start = $pos + 1;
@@ -274,12 +274,12 @@ function get_author_info($wikitext)
 	while (($pos = strpos($wikitext, "\n", $start)) != false) {
 		$line = substr($wikitext, $start, $pos);
 		$m = null;
-		if (preg_match('/^#author\(/', $line, $m)) {
+		if (preg_match('/^!author\(/', $line, $m)) {
 			return $line;
-		} else if (preg_match('/^#freeze(\W|$)/', $line, $m)) {
-			// Found #freeze still in header
+		} else if (preg_match('/^!freeze(\W|$)/', $line, $m)) {
+			// Found !freeze still in header
 		} else {
-			// other line, #author not found
+			// other line, !author not found
 			return null;
 		}
 		$start = $pos + 1;
@@ -292,7 +292,7 @@ function get_author_info($wikitext)
  */
 function get_update_datetime_from_author($author_line) {
 	$m = null;
-	if (preg_match('/^#author\(\"([^\";]+)(?:;([^\";]+))?/', $author_line, $m)) {
+	if (preg_match('/^!author\(\"([^\";]+)(?:;([^\";]+))?/', $author_line, $m)) {
 		if ($m[2]) {
 			return $m[2];
 		} else if ($m[1]) {
@@ -453,8 +453,8 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-	fputs($fp, '#freeze'    . "\n");
-	fputs($fp, '#norelated' . "\n"); // :)
+	fputs($fp, '!freeze'    . "\n");
+	fputs($fp, '!norelated' . "\n"); // :)
 	fputs($fp, join('', $lines));
 	flock($fp, LOCK_UN);
 	fclose($fp);
@@ -542,7 +542,7 @@ function lastmodified_add($update = '', $remove = '')
 	foreach ($recent_pages as $_page=>$time)
 		fputs($fp, '-' . htmlsc(format_date($time)) .
 			' - ' . '[[' . htmlsc($_page) . ']]' . "\n");
-	fputs($fp, '#norelated' . "\n"); // :)
+	fputs($fp, '!norelated' . "\n"); // :)
 
 	flock($fp, LOCK_UN);
 	fclose($fp);
@@ -607,7 +607,7 @@ function put_lastmodified()
 		$s_page    = htmlsc($page);
 		fputs($fp, '-' . $s_lastmod . ' - [[' . $s_page . ']]' . "\n");
 	}
-	fputs($fp, '#norelated' . "\n"); // :)
+	fputs($fp, '!norelated' . "\n"); // :)
 	flock($fp, LOCK_UN);
 	fclose($fp);
 

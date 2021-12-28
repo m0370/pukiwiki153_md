@@ -52,7 +52,7 @@ function make_backup($page, $is_delete, $wikitext)
 		$last_content = get_source($page, TRUE, TRUE);
 		$m = array();
 		$prev_author = null;
-		if (preg_match('/^#author\("([^"]+)","([^"]*)","([^"]*)"\)/m', $last_content, $m)) {
+		if (preg_match('/^!author\("([^"]+)","([^"]*)","([^"]*)"\)/m', $last_content, $m)) {
 			$prev_author = preg_replace('/^[^:]+:/', '', $m[2]);
 		}
 		if ($prev_author !== $auth_user) {
@@ -124,7 +124,7 @@ function get_backup($page, $age = 0)
 
 			// Allocate
 			$retvars[$_age] = array('time'=>$match[1], 'data'=>array());
-		} else if (preg_match('/^\s*#author\("([^"]+)","([^"]+)","([^"]*)"\)/', $line, $match)) {
+		} else if (preg_match('/^\s*!author\("([^"]+)","([^"]+)","([^"]*)"\)/', $line, $match)) {
 			$retvars[$_age]['author_datetime'] = $match[1];
 			$retvars[$_age]['author'] = $match[2];
 			$retvars[$_age]['author_fullname'] = $match[3];

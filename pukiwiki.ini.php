@@ -53,7 +53,7 @@ define('PKWK_QUERY_STRING_MAX', 640); // Bytes, 0 = OFF
 //   argsN+1
 //   }}
 //   #memo(This makes '#memo(foo)' to this)
-define('PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK', 1); // 1 = Disabled
+define('PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK', 0); // 1 = Disabled
 
 /////////////////////////////////////////////////
 // Language / Encoding settings
@@ -523,7 +523,7 @@ $auto_template_rules = array(
 
 /////////////////////////////////////////////////
 // Automatically add fixed heading anchor
-$fixed_heading_anchor = 1;
+$fixed_heading_anchor = 0;
 
 /////////////////////////////////////////////////
 // Remove the first spaces from Preformatted text
