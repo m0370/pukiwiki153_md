@@ -181,7 +181,7 @@ function plugin_tracker_action()
 			}
 			$postdata[$num] = str_replace(
 				"[$key]",
-				($postdata[$num]{0} == '|' or $postdata[$num]{0} == ':') ?
+				($postdata[$num][0] == '|' or $postdata[$num][0] == ':') ?
 					str_replace('|','&#x7c;',$value) : $value,
 				$postdata[$num]
 			);
@@ -1236,7 +1236,7 @@ class Tracker_list
 					// Ignore empty line
 					continue;
 				}
-				$this->pipe = ($line{0} == '|' or $line{0} == ':');
+				$this->pipe = ($line[0] == '|' or $line[0] == ':');
 				$source .= preg_replace_callback('/\[([^\[\]]+)\]/',array(&$this,'replace_item'),$line);
 			}
 		}

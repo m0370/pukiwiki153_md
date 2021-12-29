@@ -1066,7 +1066,7 @@ function csv_explode($separator, $string)
 
 	foreach ($matches[1] as $str) {
 		$len = strlen($str);
-		if ($len > 1 && $str{0} == '"' && $str{$len - 1} == '"')
+		if ($len > 1 && $str[0] == '"' && $str{$len - 1} == '"')
 			$str = str_replace('""', '"', substr($str, 1, -1));
 		$retval[] = $str;
 	}
@@ -1076,7 +1076,7 @@ function csv_explode($separator, $string)
 // Implode an array with CSV data format (escape double quotes)
 function csv_implode($glue, $pieces)
 {
-	$_glue = ($glue != '') ? '\\' . $glue{0} : '';
+	$_glue = ($glue != '') ? '\\' . $glue[0] : '';
 	$arr = array();
 	foreach ($pieces as $str) {
 		if (preg_match('/[' . '"' . "\n\r" . $_glue . ']/', $str))

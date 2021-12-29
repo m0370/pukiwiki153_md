@@ -178,13 +178,13 @@ function & Factory_Div(& $root, $text)
 	// Seems block plugin?
 	if (PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK) {
 		// Usual code
-		if (preg_match('/^\!([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
+		if (preg_match('/^\#([^\(]+)(?:\((.*)\))?/', $text, $matches) &&
 		    exist_plugin_convert($matches[1])) {
 			return new Div($matches);
 		}
 	} else {
 		// Hack code
-		if(preg_match('/^!([^\(\{]+)(?:\(([^\r]*)\))?(\{*)/', $text, $matches) &&
+		if(preg_match('/^#([^\(\{]+)(?:\(([^\r]*)\))?(\{*)/', $text, $matches) &&
 		   exist_plugin_convert($matches[1])) {
 			$len  = strlen($matches[3]);
 			$body = array();
@@ -912,7 +912,7 @@ class Body extends Element
 		':' => 'DList',
 		'|' => 'Table',
 		',' => 'YTable',
-		'!' => 'Div');
+		'#' => 'Div');
 
 	function Body($id)
 	{
