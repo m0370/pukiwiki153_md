@@ -42,6 +42,7 @@ function convert_html($lines)
 				$line = "plugin ${plugin} failed.";
 			}
 		} else {
+			$line = preg_replace('/\[(.*?)\]\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)( )?(\".*\")?\)/', "[[$1>$2]]", $line); // Markdown式リンクをPukiwiki式リンクに変換
 			$line = make_link($line);
 			// ファイル読み込んだ場合に改行コードが末尾に付いていることがあるので削除
 			// 空白は削除しちゃだめなのでrtrim()は使ってはいけない
