@@ -1090,3 +1090,42 @@ function prepare_links_related($page) {
 		}
 	}
 }
+
+/**
+ * Markdown edit
+ */
+function add_notemd($wikitext)
+{
+	$author_text = sprintf('#author("%s","%s","%s")',
+		get_date_atom(UTIME + LOCALZONE) . $datetime_to_keep,
+		($author ? $user_prefix . $author : ''),
+		$displayname) . "\n";
+	return "#notemd\n" . $wikitext;
+}
+
+function remove_notemd($wikitext)
+{
+	return preg_replace('/^\s*#notemd(\n|$)/m', '', $wikitext);
+}
+
+/**
+ * Get author info from wikitext
+ */
+function get_notemd($wikitext)
+{
+	$start = 0;
+	while (($pos = strpos($wikitext, "\n", $start)) != false) {
+		$line = substr($wikitext, $start, $pos);
+		$m = null;
+		if (preg_match('/^#notemd/', $line, $m)) {
+			return $line;
+		} else if (preg_match('/^#freeze(\W|$)/', $line, $m)) {
+			// Found #freeze still in header
+		} else {
+			// other line, #notemd not found
+			return null;
+		}
+		$start = $pos + 1;
+	}
+	return null;
+}
