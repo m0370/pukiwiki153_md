@@ -385,6 +385,7 @@ EOD;
 	$s_page      = htmlsc($page);
 	$s_digest    = htmlsc($digest);
 	$s_postdata  = htmlsc($refer . $postdata);
+	$ss_postdata = remove_notemd($s_postdata);
 	$s_original  = isset($vars['original']) ? htmlsc($vars['original']) : $s_postdata;
 	$b_preview   = isset($vars['preview']); // TRUE when preview
 	$btn_preview = $b_preview ? $_btn_repreview : $_btn_preview;
@@ -430,7 +431,7 @@ $template
   <input type="hidden" name="digest" value="$s_digest" />
   <input type="hidden" id="_msg_edit_cancel_confirm" value="$h_msg_edit_cancel_confirm" />
   <input type="hidden" id="_msg_edit_unloadbefore_message" value="$h_msg_edit_unloadbefore_message" />
-  <textarea name="msg" rows="$rows" cols="$cols">$s_postdata</textarea>
+  <textarea name="msg" rows="$rows" cols="$cols">$ss_postdata</textarea>
   <br />
   <div style="float:left;">
    <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
