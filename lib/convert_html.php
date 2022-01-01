@@ -19,14 +19,18 @@ function convert_html($lines)
 
 	if (! is_array($lines)) $lines = explode("\n", $lines);
 
-	if (! preg_match('/\#notemd/', $lines) ) {
+	if (! preg_grep('/^\#notemd/', $lines) ) {
+		// Pukiwiki記法
 		$body = new Body(++$contents_id);
 		$body->parse($lines);
 	
 		return $body->toString();
 	} else {
+		// Markdown記法
 		foreach ( $lines as &$line ) {
 			$matches = array();
+			
+			$line = preg_replace('/(\#author|\#notemd|\#freeze)/', '', $line); // #author,#notemd,#freezeはMarkdown Parserに渡さない
 			if ( preg_match('/^\\!([a-zA-Z0-9_]+)(\\(([^\\)\\n]*)?\\))?/', $line, $matches) ) {
 				$plugin = $matches[1];
 				if ( exist_plugin_convert($plugin) ) {
