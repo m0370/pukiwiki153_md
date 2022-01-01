@@ -409,7 +409,7 @@ EOD;
 
 	// Pukiwiki-Markdown
 	$add_notemd = '';
-	$notemd_on = isset($vars['notemd']) ? ' checked="checked"' : '';
+	if(get_notemd($s_postdata)) { $notemd_on = 'checked="checked"';};
 	$add_notemd = '<input type="checkbox" name="notemd" ' .
 		'id="_edit_form_notemd" value="true"' . $notemd_on . ' />' . "\n" .
 		'   ' . '<label for="_edit_form_notemd"><span class="small">Markdown</span></label>' . "\n" .

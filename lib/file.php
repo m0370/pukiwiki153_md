@@ -1109,19 +1109,5 @@ function remove_notemd($wikitext)
  */
 function get_notemd($wikitext)
 {
-	$start = 0;
-	while (($pos = strpos($wikitext, "\n", $start)) != false) {
-		$line = substr($wikitext, $start, $pos);
-		$m = null;
-		if (preg_match('/^#notemd/', $line, $m)) {
-			return $line;
-		} else if (preg_match('/^#freeze(\W|$)/', $line, $m)) {
-			// Found #freeze still in header
-		} else {
-			// other line, #notemd not found
-			return null;
-		}
-		$start = $pos + 1;
-	}
-	return null;
+	return preg_match('/(^|\n)\#notemd\n/',$wikitext);
 }
