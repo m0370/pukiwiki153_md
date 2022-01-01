@@ -254,8 +254,8 @@ function remove_author_header($wikitext)
 				return substr($wikitext, 0, $start - 1) .
 					substr($wikitext, $pos + 1);
 			}
-		} else if (preg_match('/^!freeze(\W|$)/', $line, $m)) {
-			// Found !freeze still in header
+		} else if (preg_match('/^#freeze(\W|$)/', $line, $m)) {
+			// Found #freeze still in header
 		} else {
 			// other line, #author not found
 			return $wikitext;
@@ -276,8 +276,8 @@ function get_author_info($wikitext)
 		$m = null;
 		if (preg_match('/^#author\(/', $line, $m)) {
 			return $line;
-		} else if (preg_match('/^!freeze(\W|$)/', $line, $m)) {
-			// Found !freeze still in header
+		} else if (preg_match('/^#freeze(\W|$)/', $line, $m)) {
+			// Found #freeze still in header
 		} else {
 			// other line, #author not found
 			return null;
@@ -453,7 +453,7 @@ function add_recent($page, $recentpage, $subject = '', $limit = 0)
 	set_file_buffer($fp, 0);
 	flock($fp, LOCK_EX);
 	rewind($fp);
-	fputs($fp, '!freeze'    . "\n");
+	fputs($fp, '#freeze'    . "\n");
 	fputs($fp, '!norelated' . "\n"); // :)
 	fputs($fp, join('', $lines));
 	flock($fp, LOCK_UN);
