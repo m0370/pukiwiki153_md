@@ -1,0 +1,11 @@
+!author("2021-12-29T01:48:07+00:00;2021-12-28T23:48:36+00:00","","")
+!freeze
+
+## AutoAliasName
+AutoAlias definition
+
+Reference: https://pukiwiki.osdn.jp/?AutoAlias
+
+## PukiWiki
+- [pukiwiki.official](https://pukiwiki.osdn.jp/)
+- [pukiwiki.dev](https://pukiwiki.osdn.jp/dev/)

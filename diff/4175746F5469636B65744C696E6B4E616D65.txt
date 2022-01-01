@@ -1,0 +1,23 @@
+-!author("2021-12-28T13:22:04+00:00","","")
++!author("2021-12-29T01:48:47+00:00;2021-12-29T01:38:09+00:00","","")
+ !freeze
+ * AutoTicketLink definition [#def]
+ 
+ Reference: https://pukiwiki.osdn.jp/?AutoTicketLink
+ 
+- - jira https://site1.example.com/jira/browse/
+- -- AAA Project title $1
+- -- BBB Project title $1
+- - jira https://site2.example.com/jira/browse/
+- -- PROJECTA Site2 $1
++- jira https://site1.example.com/jira/browse/
++  - AAA Project title $1
++  - BBB Project title $1
++- jira https://site2.example.com/jira/browse/
++  - PROJECTA Site2 $1
+ 
+  (Default definition) pukiwiki.ini.php
+   = array(
+    'title' => 'My JIRA - $1',
+    'base_url' => 'https://issues.example.com/jira/browse/',
+  );
