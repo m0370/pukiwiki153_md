@@ -385,7 +385,7 @@ EOD;
 	$s_page      = htmlsc($page);
 	$s_digest    = htmlsc($digest);
 	$s_postdata  = htmlsc($refer . $postdata);
-	$ss_postdata = remove_notemd($s_postdata);
+	$ss_postdata = remove_notemd($s_postdata); //Pukiwiki-Markdownで編集画面で#notemdを非表示にするため
 	$s_original  = isset($vars['original']) ? htmlsc($vars['original']) : $s_postdata;
 	$b_preview   = isset($vars['preview']); // TRUE when preview
 	$btn_preview = $b_preview ? $_btn_repreview : $_btn_preview;
@@ -410,9 +410,9 @@ EOD;
 
 	// Pukiwiki-Markdown
 	$add_notemd = '';
-	if(get_notemd($s_postdata)) { $notemd_on = 'checked="checked"';};
-	$add_notemd = '<input type="checkbox" name="notemd" ' .
-		'id="_edit_form_notemd" value="true"' . $notemd_on . ' />' . "\n" .
+	if(get_notemd($postdata) || ! is_page($page, $clearcache = TRUE) /*新規ページはデフォルトでMarkdown*/) { $notemd_on = 'checked="checked"';};
+	$add_notemd = '<input onclick="window.editor()" type="checkbox" name="notemd" ' .
+		'id="_edit_form_notemd" value="true"' . $notemd_on . '>' . "\n" .
 		'   ' . '<label for="_edit_form_notemd"><span class="small">Markdown</span></label>' . "\n" .
 		$add_notemd .
 		'&nbsp;';
