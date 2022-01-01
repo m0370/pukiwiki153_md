@@ -1,5 +1,4 @@
-#author("2022-01-01T16:57:27+00:00;2022-01-01T16:50:17+00:00","","")
-#notemd
+#author("2022-01-01T17:40:19+00:00","","")
 ## タイトル1
 
 <b><a href="https://google.com">Google</a></b>
@@ -13,5 +12,8 @@ https://google.com
 [Google](https://google.com)
 
 [[Google>https://google.com]]
+[[Google:https://google.com]]
 
 [[Google]]
+
+#notemd
