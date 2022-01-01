@@ -19,45 +19,43 @@ function convert_html($lines)
 
 	if (! is_array($lines)) $lines = explode("\n", $lines);
 
-
-/*
-	$body = new Body(++$contents_id);
-	$body->parse($lines);
-
-	return $body->toString();
-*/
-
-	foreach ( $lines as &$line ) {
-		$matches = array();
-		if ( preg_match('/^\\!([a-zA-Z0-9_]+)(\\(([^\\)\\n]*)?\\))?/', $line, $matches) ) {
-			$plugin = $matches[1];
-			if ( exist_plugin_convert($plugin) ) {
-				$name = 'plugin_' . $matches[1] . '_convert';
-				$params = array();
-				if ( isset($matches[3]) ) {
-					$params = explode(',', $matches[3]);
+	if (! preg_match('/\#notemd/', $lines) ) {
+		$body = new Body(++$contents_id);
+		$body->parse($lines);
+	
+		return $body->toString();
+	} else {
+		foreach ( $lines as &$line ) {
+			$matches = array();
+			if ( preg_match('/^\\!([a-zA-Z0-9_]+)(\\(([^\\)\\n]*)?\\))?/', $line, $matches) ) {
+				$plugin = $matches[1];
+				if ( exist_plugin_convert($plugin) ) {
+					$name = 'plugin_' . $matches[1] . '_convert';
+					$params = array();
+					if ( isset($matches[3]) ) {
+						$params = explode(',', $matches[3]);
+					}
+					$line = call_user_func_array($name, $params);
+				} else {
+					$line = "plugin ${plugin} failed.";
 				}
-				$line = call_user_func_array($name, $params);
 			} else {
-				$line = "plugin ${plugin} failed.";
+				$line = preg_replace('/\[(.*?)\]\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)( )?(\".*\")?\)/', "[[$1>$2]]", $line); // Markdown式リンクをPukiwiki式リンクに変換
+				$line = make_link($line);
+				// ファイル読み込んだ場合に改行コードが末尾に付いていることがあるので削除
+				// 空白は削除しちゃだめなのでrtrim()は使ってはいけない
+	            $line = str_replace(array("\r\n","\n","\r"), "", $line);
 			}
-		} else {
-			$line = preg_replace('/\[(.*?)\]\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)( )?(\".*\")?\)/', "[[$1>$2]]", $line); // Markdown式リンクをPukiwiki式リンクに変換
-			$line = make_link($line);
-			// ファイル読み込んだ場合に改行コードが末尾に付いていることがあるので削除
-			// 空白は削除しちゃだめなのでrtrim()は使ってはいけない
-            $line = str_replace(array("\r\n","\n","\r"), "", $line);
 		}
+		unset($line);
+	
+		$text = implode("\n", $lines);
+	
+		$parsedown = new \Parsedown(); //Parsedown→ParsedownExtraに変更しても良い
+		$result = $parsedown ->setBreaksEnabled(true) ->text($text); // ->setBreaksEnabled(true)を付けて改行を可能にしている
+	
+		return $result;
 	}
-	unset($line);
-
-	$text = implode("\n", $lines);
-
-	$parsedown = new \Parsedown(); //Parsedown→ParsedownExtraに変更しても良い
-	$result = $parsedown ->setBreaksEnabled(true) ->text($text); // ->setBreaksEnabled(true)を付けて改行を可能にしている
-
-	return $result;
-
 }
 
 // Block elements
