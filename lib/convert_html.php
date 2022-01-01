@@ -30,7 +30,7 @@ function convert_html($lines)
 		foreach ( $lines as &$line ) {
 			$matches = array();
 			
-			$line = preg_replace('/(\#author|\#notemd|\#freeze)/', '', $line); // #author,#notemd,#freezeはMarkdown Parserに渡さない
+			$line = preg_replace('/(\#author\(.*\)|\#notemd|\#freeze)/', '', $line); // #author,#notemd,#freezeはMarkdown Parserに渡さない
 			if ( preg_match('/^\\!([a-zA-Z0-9_]+)(\\(([^\\)\\n]*)?\\))?/', $line, $matches) ) {
 				$plugin = $matches[1];
 				if ( exist_plugin_convert($plugin) ) {
@@ -44,7 +44,8 @@ function convert_html($lines)
 					$line = "plugin ${plugin} failed.";
 				}
 			} else {
-				$line = preg_replace('/\[(.*?)\]\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)( )?(\".*\")?\)/', "[[$1>$2]]", $line); // Markdown式リンクをPukiwiki式リンクに変換
+				// $line = preg_replace('/\[(.*?)\]\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)( )?(\".*\")?\)/', "[[$1>$2]]", $line); // Markdown式リンクをPukiwiki式リンクに変換
+				$line = preg_replace('/\[\[(.+)[\:\>](https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)\]\]/', "[$1]($2)", $line); // Pukiwiki式リンクをMarkdown式リンクに変換
 				$line = make_link($line);
 				// ファイル読み込んだ場合に改行コードが末尾に付いていることがあるので削除
 				// 空白は削除しちゃだめなのでrtrim()は使ってはいけない
