@@ -1096,11 +1096,7 @@ function prepare_links_related($page) {
  */
 function add_notemd($wikitext)
 {
-	$author_text = sprintf('#author("%s","%s","%s")',
-		get_date_atom(UTIME + LOCALZONE) . $datetime_to_keep,
-		($author ? $user_prefix . $author : ''),
-		$displayname) . "\n";
-	return "#notemd\n" . $wikitext;
+	return "#notemd\n\n" . $wikitext;
 }
 
 function remove_notemd($wikitext)

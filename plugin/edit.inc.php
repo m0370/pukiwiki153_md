@@ -254,6 +254,13 @@ function plugin_edit_write()
 		$retvars['body'] .= edit_form($page, $msg, $digest, FALSE);
 		return $retvars;
 	}
+	
+	// Pukiwiki-Markdown
+	$write_notemd = isset($vars['notemd']) && $vars['notemd'] != '';
+	if ( ! preg_match('/(^|\n)\#notemd\n/',$postdata) && $write_notemd) {
+		$postdata = add_notemd($postdata);
+	}
+	
 
 	page_write($page, $postdata, $notimeupdate != 0 && $notimestamp);
 	pkwk_headers_sent();

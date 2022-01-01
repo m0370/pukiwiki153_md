@@ -407,6 +407,15 @@ EOD;
 			'&nbsp;';
 	}
 
+	// Pukiwiki-Markdown
+	$add_notemd = '';
+	$notemd_on = isset($vars['notemd']) ? ' checked="checked"' : '';
+	$add_notemd = '<input type="checkbox" name="notemd" ' .
+		'id="_edit_form_notemd" value="true"' . $notemd_on . ' />' . "\n" .
+		'   ' . '<label for="_edit_form_notemd"><span class="small">Markdown</span></label>' . "\n" .
+		$add_notemd .
+		'&nbsp;';
+
 	// 'margin-bottom', 'float:left', and 'margin-top'
 	// are for layout of 'cancel button'
 	$h_msg_edit_cancel_confirm = htmlsc($_msg_edit_cancel_confirm);
@@ -428,6 +437,7 @@ $template
    <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
    $add_top
    $add_notimestamp
+   $add_notemd
   </div>
   <textarea name="original" rows="1" cols="1" style="display:none">$s_original</textarea>
  </form>
