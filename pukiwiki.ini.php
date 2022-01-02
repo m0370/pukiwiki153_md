@@ -645,3 +645,11 @@ $agents = array(
 
 	array('pattern'=>'#^#',	'profile'=>'default'),	// Sentinel
 );
+
+/////////////////////////////////////////////////
+// Pukiwiki Markdown
+// https://github.com/m0370/pukiwiki153_md
+// https://github.com/sparksuite/simplemde-markdown-editor/
+
+$markdown_safemode = 1; // Safemode 1:On, 0:Off
+$use_simplemde = 1; // simple Markdown editorを使用 1:Enable, 0:Disable

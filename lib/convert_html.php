@@ -57,7 +57,9 @@ function convert_html($lines)
 		$text = implode("\n", $lines);
 	
 		$parsedown = new \Parsedown(); //Parsedown→ParsedownExtraに変更しても良い
-		$result = $parsedown ->setBreaksEnabled(true) ->text($text); // ->setBreaksEnabled(true)を付けて改行を可能にしている
+		$result = $parsedown
+		->setBreaksEnabled(true) // enables automatic line breaks
+		->text($text);
 	
 		return $result;
 	}
