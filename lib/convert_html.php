@@ -58,6 +58,7 @@ function convert_html($lines)
 	
 		$parsedown = new \Parsedown(); //Parsedown→ParsedownExtraに変更しても良い
 		$result = $parsedown
+		->setSafeMode(false) // safemode
 		->setBreaksEnabled(true) // enables automatic line breaks
 		->text($text);
 	

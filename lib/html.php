@@ -442,7 +442,7 @@ $template
   <textarea id="editor" name="msg" rows="$rows" cols="$cols">$ss_postdata</textarea>
   <br />
   <div style="float:left;">
-   <input type="hidden" name="preview" value="$btn_preview" accesskey="p" />
+   <input type="submit" name="preview" value="$btn_preview" accesskey="p" />
    <input type="submit" name="write"   value="$_btn_update" accesskey="s" />
    $add_top
    $add_notimestamp

@@ -71,6 +71,13 @@ function plugin_edit_preview($msg)
 	$page = isset($vars['page']) ? $vars['page'] : '';
 
 	$msg = preg_replace(PLUGIN_EDIT_FREEZE_REGEX, '', $msg);
+
+	// Pukiwiki-Markdown
+	$write_notemd = isset($vars['notemd']) && $vars['notemd'] != '';
+	if ( ! preg_match('/(^|\n)\#notemd\n/',$msg) && $write_notemd) {
+		$msg = add_notemd($msg);
+	}
+
 	$postdata = $msg;
 
 	if (isset($vars['add']) && $vars['add']) {
@@ -89,7 +96,45 @@ function plugin_edit_preview($msg)
 	if ($postdata) {
 		$postdata = make_str_rules($postdata);
 		$postdata = explode("\n", $postdata);
-		$postdata = drop_submit(convert_html($postdata));
+		if (! preg_grep('/^\#notemd/', $postdata) ){
+			$postdata = drop_submit(convert_html($postdata));
+		} else {
+			// Markdown記法
+			foreach ( $postdata as &$line ) {
+				$matches = array();
+				
+				$line = preg_replace('/(\#author\(.*\)|\#notemd|\#freeze)/', '', $line); // #author,#notemd,#freezeはMarkdown Parserに渡さない
+				if ( preg_match('/^\\!([a-zA-Z0-9_]+)(\\(([^\\)\\n]*)?\\))?/', $line, $matches) ) {
+					$plugin = $matches[1];
+					if ( exist_plugin_convert($plugin) ) {
+						$name = 'plugin_' . $matches[1] . '_convert';
+						$params = array();
+						if ( isset($matches[3]) ) {
+							$params = explode(',', $matches[3]);
+						}
+						$line = call_user_func_array($name, $params);
+					} else {
+						$line = "plugin ${plugin} failed.";
+					}
+				} else {
+					// $line = preg_replace('/\[(.*?)\]\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)( )?(\".*\")?\)/', "[[$1>$2]]", $line); // Markdown式リンクをPukiwiki式リンクに変換
+					$line = preg_replace('/\[\[(.+)[\:\>](https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)\]\]/', "[$1]($2)", $line); // Pukiwiki式リンクをMarkdown式リンクに変換
+					$line = make_link($line);
+					// ファイル読み込んだ場合に改行コードが末尾に付いていることがあるので削除
+					// 空白は削除しちゃだめなのでrtrim()は使ってはいけない
+		            $line = str_replace(array("\r\n","\n","\r"), "", $line);
+				}
+			}
+			unset($line);
+		
+			$postdata = implode("\n", $postdata);
+		
+			$parsedown = new \Parsedown(); //Parsedown→ParsedownExtraに変更しても良い
+			$postdata = drop_submit($parsedown
+			->setBreaksEnabled(true) // enables automatic line breaks
+			->text($postdata));
+
+		}
 		$body .= '<div id="preview">' . $postdata . '</div>' . "\n";
 	}
 	$body .= edit_form($page, $msg, $vars['digest'], FALSE);
