@@ -416,7 +416,7 @@ EOD;
 		$simplemde = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
-    var simplemde = new SimpleMDE({ element: document.getElementById("editor"),spellChecker: false });
+    var simplemde = new SimpleMDE({ element: document.getElementById("editor"),showIcons:["table"],spellChecker: false });
 </script>';
 	}
 	$add_notemd = '<input onclick="window.editor()" type="checkbox" name="notemd" ' .
