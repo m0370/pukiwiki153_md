@@ -29,7 +29,7 @@ function plugin_insert_action()
 
 	foreach($postdata_old as $line) {
 		if (! INSERT_INS) $postdata .= $line;
-		if (preg_match('/^#insert$/i', $line)) {
+		if (preg_match('/^(#insert|\!insert)$/i', $line)) {
 			if ($insert_no == $vars['insert_no'])
 				$postdata .= $insert;
 			$insert_no++;

@@ -22,7 +22,7 @@ function plugin_vote_action()
 	$matches = array();
 	foreach($postdata_old as $line) {
 
-		if (! preg_match('/^#vote(?:\((.*)\)(.*))?$/i', $line, $matches) ||
+		if (! preg_match('/^(#vote|\!vote)(?:\((.*)\)(.*))?$/i', $line, $matches) ||
 		    $vote_no++ != $vars['vote_no']) {
 			$postdata .= $line;
 			continue;

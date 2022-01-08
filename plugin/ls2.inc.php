@@ -168,7 +168,7 @@ function plugin_ls2_get_headings($page, & $params, $level, $include = FALSE,
 			array_push($params['result'],
 				'<li><a href="' . $href . $id . '">' . $line . '</a>');
 		} else if ($is_include &&
-			preg_match('/^#include\((.+)\)/', $line, $matches)) {
+			preg_match('/^(#include|\!include)\((.+)\)/', $line, $matches)) {
 			$include_args = $matches[1];
 			$page2 = $include_args;
 			$m2 = null;

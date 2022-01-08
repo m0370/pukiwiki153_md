@@ -32,7 +32,7 @@ function plugin_template_action()
 	ensure_page_readable($refer);
 	$lines = get_source($refer);
 	// Remove '#freeze'
-	if (! empty($lines) && strtolower(rtrim($lines[0])) == '#freeze')
+	if (! empty($lines) && ( strtolower(rtrim($lines[0])) == '#freeze' || strtolower(rtrim($lines[0])) == '!freeze') )
 		array_shift($lines);
 	// Remove '#author'
 	if (! empty($lines) && preg_match('/^#author\(/', $lines[0]))

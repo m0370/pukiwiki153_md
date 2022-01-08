@@ -9,8 +9,8 @@
 // Comment plugin
 
 define('PLUGIN_COMMENT_DIRECTION_DEFAULT', '1'); // 1: above 0: below
-define('PLUGIN_COMMENT_SIZE_MSG',  70);
-define('PLUGIN_COMMENT_SIZE_NAME', 15);
+define('PLUGIN_COMMENT_SIZE_MSG',  50);
+define('PLUGIN_COMMENT_SIZE_NAME', 10);
 
 // ----
 define('PLUGIN_COMMENT_FORMAT_MSG',  '$msg');
@@ -55,7 +55,7 @@ function plugin_comment_action()
 	$comment_added = FALSE;
 	foreach (get_source($vars['refer']) as $line) {
 		if (! $above) $postdata .= $line;
-		if (preg_match('/^#comment/i', $line) && $comment_no++ == $vars['comment_no']) {
+		if (preg_match('/^(#comment|\!comment)/i', $line) && $comment_no++ == $vars['comment_no']) {
 			$comment_added = TRUE;
 			if ($above) {
 				$postdata = rtrim($postdata) . "\n" .
@@ -128,7 +128,7 @@ function plugin_comment_convert()
   <input type="hidden" name="above"  value="$above" />
   <input type="hidden" name="digest" value="$digest" />
   $nametags
-  <input type="text"   name="msg" id="_p_comment_comment_{$comment_no}"
+  <input type="text" name="msg" id="_p_comment_comment_{$comment_no}"
    size="$comment_cols" required />
   <input type="submit" name="comment" value="$_btn_comment" />
  </div>

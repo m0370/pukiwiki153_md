@@ -338,7 +338,7 @@ function plugin_pcomment_get_comments($page, $count, $dir, $reply)
 	$reply = (! PKWK_READONLY && $reply); // Suprress radio-buttons
 
 	$data = get_source($page);
-	$data = preg_replace('/^#pcomment\(?.*/i', '', $data);	// Avoid eternal recurse
+	$data = preg_replace('/^(#pcomment|\!pcomment)\(?.*/i', '', $data);	// Avoid eternal recurse
 
 	if (! is_array($data)) return array('', 0);
 
