@@ -83,7 +83,7 @@ class InlineConverter
 				// 'url_interwiki', // URLs (interwiki definition)
 				// 'mailto',        // mailto: URL schemes
 				// 'interwikiname', // InterWikiNames
-				// 'autoalias',     // AutoAlias
+				'autoalias',     // AutoAlias
 				'autolink',      // AutoLinks
 				'bracketname',   // BracketNames
 				'wikiname',      // WikiNames
