@@ -79,7 +79,7 @@ class InlineConverter
 			$converters = array(
 				'plugin',        // Inline plugins
 				'note',          // Footnotes
-				// 'url',           // URLs
+				'url',           // URLs
 				// 'url_interwiki', // URLs (interwiki definition)
 				// 'mailto',        // mailto: URL schemes
 				// 'interwikiname', // InterWikiNames
