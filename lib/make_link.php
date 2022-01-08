@@ -121,7 +121,7 @@ class InlineConverter
 
 		$string = preg_replace_callback('/' . $this->pattern . '/x',
 			array(& $this, 'replace'), $string);
-		if (!$markdown_safemode == 1){
+		if ($markdown_safemode == 1){
 			$arr = explode("\x08", make_line_rules(htmlsc($string)));
 		} else {
 			$arr = explode("\x08", make_line_rules($string));
