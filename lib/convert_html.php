@@ -50,8 +50,8 @@ function convert_html($lines)
 				$line = make_link($line);
 				// ファイル読み込んだ場合に改行コードが末尾に付いていることがあるので削除
 				// 空白は削除しちゃだめなのでrtrim()は使ってはいけない
-	            $line = str_replace(array("\r\n","\n","\r"), "", $line);
 			}
+		$line = str_replace(array("\r\n","\n","\r"), "", $line);
 		}
 		unset($line);
 	
