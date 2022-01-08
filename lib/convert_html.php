@@ -43,6 +43,8 @@ function convert_html($lines)
 				} else {
 					$line = "plugin ${plugin} failed.";
 				}
+			} else if (preg_match('/^\!(\[.*\])(\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+\.)?(jpe?g|png|gif|webp)\))/u', $line, $matchimg)) {
+				// Markdown記法の画像の場合はmake_linkに渡さない
 			} else {
 				// $line = preg_replace('/\[(.*?)\]\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)( )?(\".*\")?\)/', "[[$1>$2]]", $line); // Markdown式リンクをPukiwiki式リンクに変換
 				$line = preg_replace('/\[\[(.+)[\:\>](https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)\]\]/', "[$1]($2)", $line); // Pukiwiki式リンクをMarkdown式リンクに変換

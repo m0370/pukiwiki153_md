@@ -116,10 +116,11 @@ function plugin_edit_preview($msg)
 					} else {
 						$line = "plugin ${plugin} failed.";
 					}
+				} else if (preg_match('/^\!(\[.*\])(\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+\.)?(jpe?g|png|gif|webp)\))/u', $line, $matchimg)) {
+					// Markdown記法の画像の場合はmake_linkに渡さない
 				} else {
 					// $line = preg_replace('/\[(.*?)\]\((https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)( )?(\".*\")?\)/', "[[$1>$2]]", $line); // Markdown式リンクをPukiwiki式リンクに変換
 					$line = preg_replace('/\[\[(.+)[\:\>](https?\:\/\/[\-_\.\!\~\*\'\(\)a-zA-Z0-9\;\/\?\:\@\&\=\+\$\,\%\#]+)\]\]/', "[$1]($2)", $line); // Pukiwiki式リンクをMarkdown式リンクに変換
-					$line = preg_replace('/\[\#[a-zA-Z0-9]{8}\]$/', "", $line); // Pukiwiki式アンカーを非表示に
 					$line = make_link($line);
 					// ファイル読み込んだ場合に改行コードが末尾に付いていることがあるので削除
 					// 空白は削除しちゃだめなのでrtrim()は使ってはいけない
