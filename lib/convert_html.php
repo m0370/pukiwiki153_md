@@ -970,7 +970,7 @@ class Body extends Element
 
 			// Multiline-enabled block plugin
 			if (! PKWKEXP_DISABLE_MULTILINE_PLUGIN_HACK &&
-			    preg_match('/^![^{]+(\{\{+)\s*$/', $line, $matches)) {
+			    preg_match('/^#[^{]+(\{\{+)\s*$/', $line, $matches)) {
 				$len = strlen($matches[1]);
 				$line .= "\r"; // Delimiter
 				while (! empty($lines)) {
